@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: cybernewsai
+    env: python
+    buildCommand: "pip install -r requirements.txt && cd frontend && npm install && npm run build && cd .."
+    startCommand: "python run_backend.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.9
+      - key: ENVIRONMENT
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
