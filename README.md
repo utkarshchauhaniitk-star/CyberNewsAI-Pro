@@ -4,7 +4,8 @@
 [![React](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite-61DAFB.svg?style=flat&logo=react)](https://react.dev/)
 [![SQLite](https://img.shields.io/badge/Database-SQLite%20WAL-003B57.svg?style=flat&logo=sqlite)](https://www.sqlite.org/)
 [![AI Engine](https://img.shields.io/badge/AI%20Engine-Gemini%203.5%20Flash-4285F4.svg?style=flat&logo=google)](https://aistudio.google.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![CI Pipeline](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro/actions/workflows/ci.yml/badge.svg)](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 🌐 Live Demo & Deployment Status
 
