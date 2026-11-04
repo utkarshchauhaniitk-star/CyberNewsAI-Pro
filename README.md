@@ -214,7 +214,7 @@ python test_backend_api.py
 - [x] `[5/8]` Article Detail Retrieval (`/api/articles/{id}`)
 - [x] `[6/8]` Real-time Threat Intelligence Aggregations (`/api/threat-stats`)
 - [x] `[7/8]` On-Demand AI Executive Article Summarization
-- [x] `[8/8]` Video Script Studio Generation & Plaintext File Export
+- [x] `[8/8]` Interactive Threat Pinning & Live RSS Synchronization
 
 ---
 
@@ -228,41 +228,46 @@ FastAPI provides an interactive OpenAPI / Swagger UI at:
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/api/health` | Service health status and Gemini engine diagnostics |
-| `GET` | `/api/articles` | Query threat stories with `q`, `category`, `source`, `severity`, `has_cve`, `page`, `limit` |
+| `GET` | `/api/articles` | Query threat stories with `q`, `category`, `source`, `severity`, `has_cve`, `pinned`, `page`, `limit` |
 | `GET` | `/api/articles/{id}` | Detailed report extract, CVE identifiers, and severity rating |
-| `POST` | `/api/articles/{id}/summarize` | Generates a 150-word executive briefing with Gemini AI |
-| `POST` | `/api/news/refresh` | Ingests live RSS feeds, deduplicates, enriches, and stores in SQLite |
-| `GET` | `/api/threat-stats` | Threat metrics: total incidents, severity breakdown, category matrix, detected CVEs |
-| `POST` | `/api/scripts/generate` | Synthesizes a video narration teleprompter script from selected article IDs |
-| `GET` | `/api/scripts` | Lists previously generated video scripts |
-| `GET` | `/api/scripts/{id}/export` | Direct attachment download of the script as `.txt` |
+| `POST` | `/api/articles/{id}/pin` | 1-Click bookmarking of threat incidents to the Pinned Threats Vault |
+| `POST` | `/api/articles/{id}/summarize` | Generates a 150-word structured executive threat briefing with Gemini AI |
+| `POST` | `/api/news/refresh` | Ingests live RSS feeds across 5 sources, deduplicates, enriches, and persists to SQLite |
+| `GET` | `/api/threat-stats` | Aggregated threat metrics: total incidents, severity breakdown, category matrix, detected CVEs |
+| `GET` | `/api/categories` | Returns dynamic array of active threat categories |
+| `GET` | `/api/sources` | Returns list of configured threat intelligence RSS feeds |
 
 ---
 
-## Cybersecurity Portfolio Screenshots Checklist
+## Application Visual Showcase & Screenshots
 
-When presenting this project for technical interviews or portfolio reviews, capture screenshots of the following views:
+The platform is designed with an immersive cybersecurity SOC HUD aesthetic, responsive cyber-grid elements, and instant visual telemetry:
 
-1. **SOC Threat Operations Dashboard**:
-   - Highlighting the top KPI counters (Total Incidents, Critical Zero-Days, Detected CVEs).
-   - Priority Zero-Days & Urgent Advisories list with severity badges.
-   - Category distribution progress bars.
-2. **Threat Radar Feed**:
-   - Search bar active with a query like `"ransomware"` or `"zero-day"`.
-   - Category filter pills active with custom selections.
-   - Multi-select checkboxes activated with floating "Stories ready for Video Script" action bar.
-3. **Article Detail & AI Executive Summary Modal**:
-   - Showing the extracted CVE identifiers, source tag, and publication timestamp.
-   - Demonstrating the on-demand generated executive summary with the AI attribution badge.
-   - Original source link with external badge.
-4. **Video Narration Script Studio**:
-   - Displaying the teleprompter narration text with broadcast cues (`[HOST NARRATION]`, `[ON-SCREEN GRAPHIC]`).
-   - YouTube SEO Title, Description with timestamps, and video tags.
-   - Demonstrating the "Download .txt" export functionality.
-5. **Threat Intelligence Analytics**:
-   - Severity distribution gauge (Critical vs High vs Medium vs Low).
-   - Monitored RSS source percentage contributions.
-   - Detected CVE vulnerability registry chips.
+### 1. Live Threat Radar Feed (Real-Time Ingestion Stream)
+> High-velocity real-time threat stream featuring interactive category chips, severity risk badges, CVE inspector tags, and 1-click Pin-to-Vault bookmarking.
+
+![Live Threat Radar Feed](docs/screenshots/radar-feed.png)
+
+---
+
+### 2. SOC Operations War Room Dashboard
+> Central command telemetry displaying total threats indexed, critical zero-days, tracked CVE disclosures, active ingestion feeds, and categorical threat distribution.
+
+![SOC Operations War Room Dashboard](docs/screenshots/soc-warroom.png)
+
+---
+
+### 3. Threat Intelligence Analytics & Extracted CVE Registry
+> Risk posture breakdown across severity tiers, source telemetry distribution across 5 feeds, and interactive clickable CVE registry pills with instant copy & filter actions.
+
+![Threat Intelligence Analytics](docs/screenshots/threat-analytics.png)
+
+---
+
+### 4. Article Detail & AI Executive Threat Briefing Modal
+> Structured on-demand threat intelligence briefing powered by Google Gemini, highlighting threat actor attribution, impacted infrastructure, impact score, and source links.
+
+![Article Detail & AI Briefing Modal](docs/screenshots/telemetry-modal.png)
 
 ---
 
@@ -278,18 +283,18 @@ When presenting this project for technical interviews or portfolio reviews, capt
 ## Completed Features & Future Roadmap
 
 ### Completed Features
-- [x] Full-stack modernization from monolithic Flask template to FastAPI + React 19 / Vite.
-- [x] Continuous ingestion from 4 primary cybersecurity RSS feeds.
-- [x] Deduplication and SQLite WAL database persistence.
-- [x] Threat categorization and regex CVE identifier extraction.
-- [x] Real-time threat intelligence statistics and distribution charts.
-- [x] On-demand AI executive summarizer with Gemini 3.5 Flash.
-- [x] Teleprompter video narration script generator with customizable durations (2m, 5m, 8m).
-- [x] One-click script export to downloadable `.txt` files.
-- [x] Pre-seeded verified offline dataset ensuring demo reliability.
+- [x] Full-stack modernization from legacy Flask to asynchronous FastAPI + React 19 / Vite.
+- [x] Ultra-futuristic Cyberpunk SOC HUD terminal interface with interactive glowing telemetry.
+- [x] Concurrent multi-threaded RSS ingestion across 5 authoritative threat sources (BleepingComputer, The Hacker News, SecurityWeek, CISA, KrebsOnSecurity) in <1.5s.
+- [x] Deduplication and SQLite WAL database persistence with indexing.
+- [x] Automated threat categorization and regex CVE identifier extraction (`CVE-YYYY-NNNNN`).
+- [x] 100% Clickable interactive badges (Category pills, Severity tags, Source badges, CVE chips).
+- [x] 1-Click Pinned Threats Vault for incident triage and investigation saving.
+- [x] On-demand AI executive summarizer powered by Google Gemini with deterministic heuristic fallbacks.
+- [x] Pre-seeded verified offline dataset ensuring flawless interview demonstration.
 
 ### Future Roadmap
-- [ ] STIX 2.1 / TAXII feed export for direct integration into enterprise SIEM platforms (e.g. Splunk, Microsoft Sentinel).
+- [ ] STIX 2.1 / TAXII 2.1 feed export for direct integration into enterprise SIEMs (Splunk, Microsoft Sentinel).
 - [ ] Automated CVSS score lookup integration via the NIST National Vulnerability Database (NVD) REST API.
 - [ ] Automated text-to-speech (TTS) audio narration rendering using `edge-tts`.
 
