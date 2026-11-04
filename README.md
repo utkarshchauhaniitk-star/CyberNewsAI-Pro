@@ -6,6 +6,15 @@
 [![AI Engine](https://img.shields.io/badge/AI%20Engine-Gemini%203.5%20Flash-4285F4.svg?style=flat&logo=google)](https://aistudio.google.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## 🌐 Live Demo & Deployment Status
+
+| Component | Target Environment | Blueprint / Setup |
+| :--- | :--- | :--- |
+| **Unified Web Service** | Render (FastAPI + React SPA) | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro) <br/> Pre-configured via `render.yaml` blueprint |
+| **Local Interactive Radar** | Localhost (`127.0.0.1:5173`) | Instant full-stack startup with live threat feed aggregation |
+
+> 📌 **Public Deployment Setup**: CyberNewsAI includes a 1-click Render blueprint (`render.yaml`). Clicking the "Deploy to Render" button above automatically provisions the Python backend, installs dependencies, builds the React frontend, and launches the live public threat radar.
+
 An enterprise-grade **Cybersecurity Threat Intelligence Platform and Live News Radar** engineered with an ultra-futuristic cyberpunk/SOC HUD aesthetic.
 
 CyberNewsAI captures live, real-time threat intelligence directly from authoritative threat research repositories across the internet in under a second upon pressing **LIVE RADAR SYNC**. Built as a final-year cybersecurity student portfolio project, the platform features fully interactive buttons, dynamic category filtering, instant CVE search, pin-to-vault bookmarking, and on-demand AI executive summaries.
