@@ -128,8 +128,8 @@ CyberNewsAI/
 ### 1. Clone & Set Up Backend Virtual Environment
 ```bash
 # Clone the repository
-git clone https://github.com/utkarshchauhan/CyberNewsAI.git
-cd CyberNewsAI
+git clone https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro.git
+cd CyberNewsAI-Pro
 
 # Create and activate virtual environment
 python3 -m venv venv
