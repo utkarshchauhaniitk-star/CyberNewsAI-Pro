@@ -1,308 +1,262 @@
-# CyberNewsAI — Real-Time Threat Intelligence & Live News Radar
+# CyberNewsAI — Cybersecurity Threat Intelligence Platform & Live News Radar
 
+[![CI Pipeline](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro/actions/workflows/ci.yml/badge.svg)](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React%2019%20%2B%20Vite-61DAFB.svg?style=flat&logo=react)](https://react.dev/)
 [![SQLite](https://img.shields.io/badge/Database-SQLite%20WAL-003B57.svg?style=flat&logo=sqlite)](https://www.sqlite.org/)
-[![AI Engine](https://img.shields.io/badge/AI%20Engine-Gemini%203.5%20Flash-4285F4.svg?style=flat&logo=google)](https://aistudio.google.com/)
-[![CI Pipeline](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro/actions/workflows/ci.yml/badge.svg)](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-## 🌐 Live Demo & Deployment Status
-
-| Component | Target Environment | Blueprint / Setup |
-| :--- | :--- | :--- |
-| **Unified Web Service** | Render (FastAPI + React SPA) | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro) <br/> Pre-configured via `render.yaml` blueprint |
-| **Local Interactive Radar** | Localhost (`127.0.0.1:5173`) | Instant full-stack startup with live threat feed aggregation |
-
-> 📌 **Public Deployment Setup**: CyberNewsAI includes a 1-click Render blueprint (`render.yaml`). Clicking the "Deploy to Render" button above automatically provisions the Python backend, installs dependencies, builds the React frontend, and launches the live public threat radar.
-
-An enterprise-grade **Cybersecurity Threat Intelligence Platform and Live News Radar** engineered with an ultra-futuristic cyberpunk/SOC HUD aesthetic.
-
-CyberNewsAI captures live, real-time threat intelligence directly from authoritative threat research repositories across the internet in under a second upon pressing **LIVE RADAR SYNC**. Built as a final-year cybersecurity student portfolio project, the platform features fully interactive buttons, dynamic category filtering, instant CVE search, pin-to-vault bookmarking, and on-demand AI executive summaries.
+[![AI Engine](https://img.shields.io/badge/AI%20Engine-Gemini%20Flash-4285F4.svg?style=flat&logo=google)](https://aistudio.google.com/)
 
 ---
 
-## Architecture Overview
+## 1. Project Overview
+**CyberNewsAI-Pro** is a specialized cybersecurity threat intelligence platform and live news radar engineered to aggregate, categorize, and analyze emerging security advisories, vulnerability disclosures, and CVEs across authoritative global research feeds.
 
+- **Developer**: Utkarsh Singh Chauhan (Cybersecurity Student)
+- **Repository**: [github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro](https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro)
+- **Interface Design**: Dark tactical cybersecurity SOC HUD with real-time category filtering and interactive threat inspection.
+
+---
+
+## 2. Problem Statement
+Cybersecurity analysts, security researchers, and SOC teams must stay informed of rapidly evolving zero-day exploits, ransomware campaigns, and vendor advisories across dozens of fragmented sources. Manually browsing individual security websites causes alert fatigue, missed vulnerabilities, and delayed mitigation. CyberNewsAI addresses this by centralizing threat telemetry into a single, near-real-time dashboard with automated CVE parsing, severity tiering, and concise executive summaries.
+
+---
+
+## 3. Actual Features
+- **Concurrent Multi-Feed Ingestion**: Fetches articles from 5 authoritative research feeds concurrently using Python thread pools.
+- **Automated Threat Categorization**: Classifies incidents into 6 core domains:
+  - *Ransomware & Extortion*
+  - *Vulnerabilities & Exploits*
+  - *Data Breaches & Leaks*
+  - *Malware & Botnets*
+  - *Nation-State & APT*
+  - *Cloud & Infrastructure*
+- **Regex CVE Identifier Extraction**: Automatically detects Common Vulnerabilities and Exposures designations (`CVE-YYYY-NNNN+`) within article titles and summaries.
+- **Dynamic Risk Tiering**: Assigns severity ratings (`Critical`, `High`, `Medium`, `Low`) based on zero-day indicators, active exploitation keywords, and impact keywords.
+- **Interactive SOC HUD**:
+  - Click any category chip, severity badge, or source pill to filter the feed instantly.
+  - Click any extracted CVE badge to filter for related advisories.
+  - Pin-to-Vault bookmarking to save notable incidents for forensic follow-up.
+- **AI Executive Briefings & Teleprompter Scripting**: Generates structured analyst threat briefings and video scripts using Google Gemini (with an offline heuristic fallback).
+- **Offline Fallback Dataset**: Seeds a baseline set of verified cyber threat stories if initial network queries are blocked.
+
+---
+
+## 4. Technology Stack
+### Backend
+- **Framework**: FastAPI (Python 3.12)
+- **Validation**: Pydantic v2
+- **Feed Processing**: `feedparser`, `requests`, `beautifulsoup4`, `trafilatura`
+- **Database**: SQLite with Write-Ahead Logging (WAL mode)
+- **AI Integration**: Google Gemini API (via `google-generativeai` client wrapper)
+- **Server**: Uvicorn ASGI Server
+
+### Frontend
+- **Framework**: React 19 with Vite
+- **Styling**: Tailwind CSS (dark tactical cybersecurity SOC theme)
+- **Icons**: Lucide React
+- **API Client**: Native `fetch` with typed service layer
+
+---
+
+## 5. Architecture
 ```
-                          ┌────────────────────────────────────────────────────────┐
-                          │               Authoritative Threat Feeds               │
-                          │   (BleepingComputer, The Hacker News, SecurityWeek,    │
-                          │            CISA Alerts, KrebsOnSecurity)               │
-                          └──────────────────────────┬─────────────────────────────┘
-                                                     │ Concurrent ThreadPool (1-2s)
-                                                     ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                             FASTAPI BACKEND ENGINE (Port 8000)                           │
-│                                                                                          │
-│  ┌─────────────────────────┐   ┌──────────────────────────┐   ┌───────────────────────┐  │
-│  │ Concurrent RSS Ingestion│──▶│   Threat Intelligence    │──▶│    SQLite Database    │  │
-│  │ (5 Live Parallel Feeds) │   │ Classifier (CVE, Severity│   │ (WAL Mode, Indexed)   │  │
-│  └─────────────────────────┘   └──────────────────────────┘   └───────────┬───────────┘  │
-│                                                                           │              │
-│  ┌─────────────────────────┐   ┌──────────────────────────┐               │              │
-│  │ Google GenAI Integration│◀──│ Pinned Vault & Telemetry │◀──────────────┘              │
-│  │ (Executive Briefings)   │   │   (Interactive Queries)  │                              │
-│  └─────────────────────────┘   └─────────────┬────────────┘                              │
-└──────────────────────────────────────────────┼───────────────────────────────────────────┘
-                                               │ JSON REST API & Static SPA
+┌─────────────────────────────────────────────────────────────┐
+│                 Authoritative Threat Feeds                  │
+│   (BleepingComputer, The Hacker News, SecurityWeek,         │
+│            CISA Advisories, KrebsOnSecurity)                │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Concurrent ThreadPool Polling
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   FastAPI Backend Engine                    │
+│                                                             │
+│  ┌──────────────────────┐        ┌───────────────────────┐  │
+│  │ Multi-Source Feed    │───────▶│ Threat Classification │  │
+│  │ Ingestion & Cleaner  │        │ Engine & CVE Regex    │  │
+│  └──────────────────────┘        └───────────┬───────────┘  │
+│                                              │              │
+│                                              ▼              │
+│  ┌──────────────────────┐        ┌───────────────────────┐  │
+│  │ Google Gemini AI     │◀───────│ SQLite WAL Database   │  │
+│  │ Synthesis / Fallback │        │ (Deduplicated & Index)│  │
+│  └──────────────────────┘        └───────────┬───────────┘  │
+└──────────────────────────────────────────────┼──────────────┘
+                                               │ REST API
                                                ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                           FUTURISTIC REACT + VITE SOC TERMINAL                           │
-│  - Live Threat Radar Stream (Default)   - SOC Operations War Room Dashboard              │
-│  - Interactive CVE Inspector Chips      - Pinned Threats Vault (1-Click Pinning)         │
-│  - Real-time Multi-Filter Matrix        - All Clickable Holographic Buttons              │
-└──────────────────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                    React 19 + Vite SOC HUD                  │
+│  - Live Threat Radar Feed       - Pinned Threats Vault      │
+│  - Threat Analytics Overview    - Clickable Filter Matrix   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Key Features
-
-1. **Ultra-Fast Real-Time Live Sync**: Captures fresh cyber threat news from 5 parallel feeds concurrently (**BleepingComputer**, **The Hacker News**, **SecurityWeek**, **CISA**, and **KrebsOnSecurity**) with parallel Python ThreadPool workers in under 1 second.
-2. **Futuristic Cyberpunk / SOC HUD Design**: Neon glowing accents, scanline overlays, holographic badges, cyber telemetry indicators (`[SYS: ONLINE]`, `[BUFFER: SYNCHRONIZED]`), and micro-interactions.
-3. **100% Clickable & Interactive Controls**:
-   - **Click any Category Chip**: Instantly filters the live stream to that category.
-   - **Click any Severity Badge**: Instantly filters the feed for Critical, High, Medium, or Low alerts.
-   - **Click any Source Pill**: Instantly isolates news from that vendor.
-   - **Click any CVE Identifier**: Instantly filters the radar stream for that specific CVE disclosure.
-   - **Pin to Vault**: 1-click button on each card to bookmark incidents into the **Pinned Threats Vault**.
-4. **Automated Threat Domain Classification**: Categorizes incidents into:
-   - *Ransomware & Extortion*
-   - *Vulnerabilities & Exploits*
-   - *Data Breaches & Leaks*
-   - *Nation-State & APT*
-   - *Malware & Botnets*
-   - *Cloud & Infrastructure*
-   - *Defense & Advisories*
-5. **CVE Extraction & Severity Risk Tiering**: Automatic regex extraction of `CVE-\d{4}-\d{4,7}` designations and dynamic risk tiering based on active exploitation, zero-day indicators, and critical infrastructure disruption.
-6. **Persistent SQLite Database**: ACID-compliant SQLite WAL database with deduplication, search indices, and pre-seeded verified threat stories for offline resilience.
-7. **On-Demand AI Threat Briefing**: Instant executive summaries generated by Google Gemini 3.5 Flash with clear AI labeling and vendor attribution.
-8. **Secure Client Sandbox**: Strict sanitization with BeautifulSoup, zero API keys exposed in the frontend, and external links protected with `target="_blank" rel="noopener noreferrer"`.
-
----
-
-## Project Structure
-
-```
-CyberNewsAI/
-├── backend/                      # Python FastAPI application
-│   ├── main.py                   # FastAPI server, endpoints, and SPA static mount
-│   ├── database.py               # SQLite connection, schema definition & indexing
-│   ├── models.py                 # Pydantic input validation & response schemas
-│   └── services/
-│       ├── threat_classifier.py  # Threat categorization, CVE parser & severity rules
-│       ├── news_service.py       # RSS polling, deduplication, search & statistics
-│       ├── ai_service.py         # Gemini client wrapper, prompt synthesis & export
-│       └── sample_data.py        # Verified offline fallback cyber threat dataset
-├── frontend/                     # React 19 + Vite dashboard
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Header.jsx        # Telemetry header, threat ticker & feed sync
-│   │   │   ├── Sidebar.jsx       # Tactical SOC navigation console
-│   │   │   ├── DashboardView.jsx # KPI metrics, urgent zero-days & category charts
-│   │   │   ├── NewsFeedView.jsx  # Search, filters, card grid & script selector
-│   │   │   ├── ArticleDetailModal.jsx # Full advisory modal with on-demand AI briefing
-│   │   │   ├── ScriptStudioView.jsx   # Teleprompter script editor & export tool
-│   │   │   ├── ThreatStatsView.jsx    # Analytics distributions & CVE registry
-│   │   │   └── SourcesView.jsx   # Ingestion endpoints & security posture notes
-│   │   ├── services/api.js       # Typed fetch client connecting to FastAPI
-│   │   ├── App.jsx               # Application coordinator & notification state
-│   │   ├── index.css             # Dark tactical cybersecurity SOC design tokens
-│   │   └── main.jsx              # React DOM entrypoint
-│   ├── index.html                # HTML template with JetBrains Mono & Outfit typography
-│   ├── package.json              # Frontend dependencies (React 19, Lucide)
-│   └── vite.config.js            # Vite build configuration & API reverse proxy
-├── news/                         # Core ingestion logic
-│   ├── rss_fetcher.py            # Feedparser & Trafilatura scraper
-│   └── deduplicator.py           # Title-normalization deduplicator
-├── app/                          # Legacy AI modules (preserved for compatibility)
-│   ├── ai/gemini_client.py       # Google GenAI client with retry backoff
-│   └── generators/               # Prompt templates & generators
-├── run_backend.py                # Single-entrypoint server runner
-├── test_backend_api.py           # Automated test suite (8 test cases)
-├── requirements.txt              # Production Python dependencies
-├── .env.example                  # Environment configuration template
-└── README.md                     # Engineering documentation
-```
-
----
-
-## Installation & Setup
+## 6. Installation
 
 ### Prerequisites
-- Python 3.10+ (Tested on Python 3.12)
-- Node.js 18+ and npm
-- (Optional) Google Gemini API Key for dynamic AI script generation
+- **Python**: Version 3.10+ (tested on Python 3.12.9)
+- **Node.js**: Version 18+ (tested on Node v24.12.0)
+- Git
 
-### 1. Clone & Set Up Backend Virtual Environment
+### Clone the Repository
 ```bash
-# Clone the repository
 git clone https://github.com/utkarshchauhaniitk-star/CyberNewsAI-Pro.git
 cd CyberNewsAI-Pro
-
-# Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install Python dependencies
-pip install -r requirements.txt
 ```
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env`:
+---
+
+## 7. Environment Configuration
+Copy the template configuration file:
 ```bash
 cp .env.example .env
 ```
-Open `.env` and add your Google Gemini API key:
+Contents of `.env`:
 ```ini
-GEMINI_API_KEY=your_actual_gemini_api_key_here
+# Google Gemini API Key for AI Summarization (Optional — heuristic fallback enabled if omitted)
+# Obtain a free key at: https://aistudio.google.com/
+GEMINI_API_KEY=your_gemini_api_key_here
+
 PORT=8000
 HOST=0.0.0.0
 ```
-*(Note: If no API key is provided, the application automatically uses its built-in factual heuristic engine, so the application never breaks.)*
-
-### 3. Build Frontend Assets
-```bash
-cd frontend
-npm install
-npm run build
-cd ..
-```
+> **Note**: An API key is optional for testing. If omitted, the platform uses deterministic keyword heuristics for summaries.
 
 ---
 
-## Running the Application
-
-### Option A: Unified Single-Command Mode (Recommended for Demos)
-Run the complete full-stack application on a single port (`http://localhost:8000`):
+## 8. Backend Setup
 ```bash
-python run_backend.py
+# Create and activate Python virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt httpx
+
+# Run the backend server
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-Open your browser and navigate to:
-**[http://localhost:8000](http://localhost:8000)**
+- Backend API will start at: `http://localhost:8000`
+- Interactive Swagger docs: `http://localhost:8000/docs`
 
-### Option B: Development Dual-Server Mode (With Hot Reloading)
-For active frontend development with Instant Hot-Module Reloading:
+---
 
-**Terminal 1 (Backend):**
-```bash
-source venv/bin/activate
-python run_backend.py
-```
-
-**Terminal 2 (Frontend):**
+## 9. Frontend Setup
+In a second terminal window:
 ```bash
 cd frontend
+
+# Install Node dependencies
+npm install
+
+# Start Vite development server
 npm run dev
 ```
-Open **[http://localhost:5173](http://localhost:5173)** (Vite proxies all `/api/*` traffic automatically to port 8000).
+- Frontend will be available at: `http://localhost:5173`
 
 ---
 
-## Automated Verification & Test Suite
+## 10. Usage Instructions
+1. **View the Radar Feed**: Open `http://localhost:5173`. Browse ingested threat stories categorized by severity and domain.
+2. **Filter & Search**:
+   - Click any **Category** chip (e.g., *Ransomware & Extortion*) to isolate relevant advisories.
+   - Click any **Severity** badge (e.g., *Critical*) to view highest-risk alerts.
+   - Click any **CVE** identifier to filter all articles mentioning that specific vulnerability.
+3. **Pin Notable Threats**: Click **Pin to Vault** on any article card to save it for further triage.
+4. **Trigger Feed Refresh**: Click the **Live Radar Sync** button to fetch the latest threat feeds concurrently.
+5. **Generate Threat Summaries**: Click on any story to open the detail view and generate an AI-assisted executive briefing.
 
-The project includes an end-to-end automated test suite verifying all 8 core capabilities:
+---
+
+## 11. Screenshots
+
+### Live Threat Radar Feed
+> Real-time ingestion stream displaying vulnerability disclosures, threat categories, severity tags, and extracted CVE badges.
+![Radar Feed](docs/screenshots/radar-feed.png)
+
+---
+
+### SOC Operations Dashboard
+> Telemetry metrics, urgent zero-day advisories, and category breakdowns.
+![SOC War Room](docs/screenshots/soc-warroom.png)
+
+---
+
+### Threat Intelligence Analytics & CVE Registry
+> Visual charts detailing threat category distributions and extracted CVE identifiers.
+![Threat Analytics](docs/screenshots/threat-analytics.png)
+
+---
+
+### Article Detail & AI Executive Threat Briefing Modal
+> Structured advisory briefing displaying threat actor, affected infrastructure, and mitigation findings.
+![Telemetry Modal](docs/screenshots/telemetry-modal.png)
+
+---
+
+## 12. AI Functionality Explanation
+- **Model Used**: Google Gemini 3.5 Flash via the Google GenAI SDK.
+- **Function**: Ingests the article title, publication metadata, and raw content to produce a concise (under 150 words) executive briefing highlighting threat actors, affected software, and remediation guidance.
+- **Script Generation**: Synthesizes structured teleprompter scripts for security briefing broadcasts (`POST /api/scripts/generate`).
+- **Deterministic Heuristic Fallback**: If `GEMINI_API_KEY` is not provided or if the API quota is reached, CyberNewsAI automatically switches to deterministic keyword extraction and heuristic summarization so the application continues to function without interruption.
+- **Accuracy Disclaimer**: AI-generated summaries are assistive and must be verified by a security analyst against official vendor advisories and CVE records.
+
+---
+
+## 13. News Source Attribution
+All aggregated threat news items are fetched from publicly available RSS feeds provided by authoritative cybersecurity research entities:
+1. **BleepingComputer** ([bleepingcomputer.com](https://www.bleepingcomputer.com))
+2. **The Hacker News** ([thehackernews.com](https://thehackernews.com))
+3. **SecurityWeek** ([securityweek.com](https://www.securityweek.com))
+4. **Cybersecurity & Infrastructure Security Agency (CISA)** ([cisa.gov](https://www.cisa.gov))
+5. **KrebsOnSecurity** ([krebsonsecurity.com](https://krebsonsecurity.com))
+
+Each card prominently displays the source name and provides a direct, outbound hyperlink with `rel="noopener noreferrer"` to the original research article.
+
+---
+
+## 14. Testing
+Run the backend test suite:
 ```bash
 python test_backend_api.py
 ```
+**Test Results**: **8/8 verification tests passed** covering:
+- `/api/health`: Service health check.
+- `/api/categories` & `/api/sources`: Ingestion sources and category metadata.
+- `/api/articles`: Pagination, listing, and ordering.
+- Search and filtering: Keyword query and category isolation.
+- `/api/articles/{id}`: Detail modal retrieval.
+- `/api/threat-stats`: Severity distribution and CVE registry.
+- `/api/articles/{id}/summarize`: AI / heuristic briefing generation.
+- `/api/scripts/generate` and export: Briefing script generation and download.
 
-**Verification Checklist executed by the test suite:**
-- [x] `[1/8]` Health Diagnostics (`/api/health`)
-- [x] `[2/8]` Metadata Endpoints (`/api/categories`, `/api/sources`)
-- [x] `[3/8]` Paginated Article Querying (`/api/articles`)
-- [x] `[4/8]` Full-Text Search and Category Filtering
-- [x] `[5/8]` Article Detail Retrieval (`/api/articles/{id}`)
-- [x] `[6/8]` Real-time Threat Intelligence Aggregations (`/api/threat-stats`)
-- [x] `[7/8]` On-Demand AI Executive Article Summarization
-- [x] `[8/8]` Interactive Threat Pinning & Live RSS Synchronization
-
----
-
-## API Documentation
-
-FastAPI provides an interactive OpenAPI / Swagger UI at:
-**[http://localhost:8000/docs](http://localhost:8000/docs)**
-
-### Key Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/health` | Service health status and Gemini engine diagnostics |
-| `GET` | `/api/articles` | Query threat stories with `q`, `category`, `source`, `severity`, `has_cve`, `pinned`, `page`, `limit` |
-| `GET` | `/api/articles/{id}` | Detailed report extract, CVE identifiers, and severity rating |
-| `POST` | `/api/articles/{id}/pin` | 1-Click bookmarking of threat incidents to the Pinned Threats Vault |
-| `POST` | `/api/articles/{id}/summarize` | Generates a 150-word structured executive threat briefing with Gemini AI |
-| `POST` | `/api/news/refresh` | Ingests live RSS feeds across 5 sources, deduplicates, enriches, and persists to SQLite |
-| `GET` | `/api/threat-stats` | Aggregated threat metrics: total incidents, severity breakdown, category matrix, detected CVEs |
-| `GET` | `/api/categories` | Returns dynamic array of active threat categories |
-| `GET` | `/api/sources` | Returns list of configured threat intelligence RSS feeds |
+To test the frontend build:
+```bash
+cd frontend
+npm run build
+```
+**Build Result**: Built cleanly in 0.74s with zero errors.
 
 ---
 
-## Application Visual Showcase & Screenshots
-
-The platform is designed with an immersive cybersecurity SOC HUD aesthetic, responsive cyber-grid elements, and instant visual telemetry:
-
-### 1. Live Threat Radar Feed (Real-Time Ingestion Stream)
-> High-velocity real-time threat stream featuring interactive category chips, severity risk badges, CVE inspector tags, and 1-click Pin-to-Vault bookmarking.
-
-![Live Threat Radar Feed](docs/screenshots/radar-feed.png)
+## 15. Security Considerations
+- **Content Sanitization**: Ingested RSS descriptions and HTML payloads are parsed using BeautifulSoup to strip script tags, iframes, and malicious markup before rendering.
+- **Secure Links**: Outbound links to external articles open in isolated contexts (`target="_blank" rel="noopener noreferrer"`).
+- **Environment Isolation**: API keys are loaded via server-side environment variables and never transmitted to or embedded in the client frontend bundle.
+- **Parameterized SQL**: All database operations use SQLite parameterized queries to prevent SQL injection.
+- **No Active Scanning**: CyberNewsAI only ingests public feeds passively; it does not perform active probing, scanning, or penetration testing.
 
 ---
 
-### 2. SOC Operations War Room Dashboard
-> Central command telemetry displaying total threats indexed, critical zero-days, tracked CVE disclosures, active ingestion feeds, and categorical threat distribution.
-
-![SOC Operations War Room Dashboard](docs/screenshots/soc-warroom.png)
-
----
-
-### 3. Threat Intelligence Analytics & Extracted CVE Registry
-> Risk posture breakdown across severity tiers, source telemetry distribution across 5 feeds, and interactive clickable CVE registry pills with instant copy & filter actions.
-
-![Threat Intelligence Analytics](docs/screenshots/threat-analytics.png)
+## 16. Limitations
+- **Feed Availability**: Near-real-time updates depend on the availability and responsiveness of external vendor RSS endpoints.
+- **Heuristic Severity**: Threat severity ratings are computed heuristically based on keyword indicators; they represent triage suggestions rather than certified CVSS scores.
+- **AI Quota**: Full AI synthesis requires a Google Gemini API key; offline deployments rely on heuristic extraction.
 
 ---
 
-### 4. Article Detail & AI Executive Threat Briefing Modal
-> Structured on-demand threat intelligence briefing powered by Google Gemini, highlighting threat actor attribution, impacted infrastructure, impact score, and source links.
-
-![Article Detail & AI Briefing Modal](docs/screenshots/telemetry-modal.png)
-
----
-
-## Security & Compliance Principles
-
-- **Zero Client-Side Secret Exposure**: API keys (including `GEMINI_API_KEY`) reside exclusively in backend environment memory and are never bundled into client scripts.
-- **Isolated Browsing Protection**: External article hyperlinks include `rel="noopener noreferrer"` attributes to prevent tab-nabbing and DOM exploitation.
-- **Strict Content Sanitization**: RSS summaries and extracted HTML are stripped of executable JavaScript via BeautifulSoup before ingestion.
-- **Factual Integrity & AI Labeling**: AI outputs are clearly identified with `badge-ai` labels, and prompts strictly prohibit fabricating vulnerability disclosures or CVEs.
-
----
-
-## Completed Features & Future Roadmap
-
-### Completed Features
-- [x] Full-stack modernization from legacy Flask to asynchronous FastAPI + React 19 / Vite.
-- [x] Ultra-futuristic Cyberpunk SOC HUD terminal interface with interactive glowing telemetry.
-- [x] Concurrent multi-threaded RSS ingestion across 5 authoritative threat sources (BleepingComputer, The Hacker News, SecurityWeek, CISA, KrebsOnSecurity) in <1.5s.
-- [x] Deduplication and SQLite WAL database persistence with indexing.
-- [x] Automated threat categorization and regex CVE identifier extraction (`CVE-YYYY-NNNNN`).
-- [x] 100% Clickable interactive badges (Category pills, Severity tags, Source badges, CVE chips).
-- [x] 1-Click Pinned Threats Vault for incident triage and investigation saving.
-- [x] On-demand AI executive summarizer powered by Google Gemini with deterministic heuristic fallbacks.
-- [x] Pre-seeded verified offline dataset ensuring flawless interview demonstration.
-
-### Future Roadmap
-- [ ] STIX 2.1 / TAXII 2.1 feed export for direct integration into enterprise SIEMs (Splunk, Microsoft Sentinel).
-- [ ] Automated CVSS score lookup integration via the NIST National Vulnerability Database (NVD) REST API.
-- [ ] Automated text-to-speech (TTS) audio narration rendering using `edge-tts`.
-
----
-
-## Author
-
-**Utkarsh Chauhan**  
-*Final-Year Cybersecurity Engineering Student*  
-*Specialization: Threat Intelligence, Vulnerability Research & Applied AI*
+## 17. License
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for complete details.
