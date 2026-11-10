@@ -66,11 +66,15 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Enable CORS for frontend Vite/React development
+# Configure CORS safely for development and production
+cors_origins_env = os.getenv("CORS_ORIGINS", "*")
+cors_origins = [o.strip() for o in cors_origins_env.split(",") if o.strip()]
+is_wildcard = "*" in cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=cors_origins if not is_wildcard else ["*"],
+    allow_credentials=not is_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )

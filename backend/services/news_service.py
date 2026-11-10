@@ -18,21 +18,30 @@ def generate_article_id(link: str, title: str) -> str:
 
 
 def parse_iso_date(raw_date: Optional[str]) -> str:
-    """Converts RSS raw date strings into standard ISO format for proper chronological ordering."""
+    """Converts RSS raw date strings into standard UTC ISO format for proper chronological ordering."""
+    utc_now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     if not raw_date:
-        return datetime.datetime.now().isoformat()
+        return utc_now
     try:
         from email.utils import parsedate_to_datetime
         dt = parsedate_to_datetime(raw_date)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=datetime.timezone.utc)
+        else:
+            dt = dt.astimezone(datetime.timezone.utc)
         return dt.isoformat()
     except Exception:
         pass
     try:
         from dateutil import parser
         dt = parser.parse(raw_date)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=datetime.timezone.utc)
+        else:
+            dt = dt.astimezone(datetime.timezone.utc)
         return dt.isoformat()
     except Exception:
-        return datetime.datetime.now().isoformat()
+        return utc_now
 
 
 def upsert_article(conn: sqlite3.Connection, article_data: Dict) -> bool:

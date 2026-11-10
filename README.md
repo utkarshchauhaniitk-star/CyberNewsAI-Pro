@@ -219,11 +219,12 @@ Each card prominently displays the source name and provides a direct, outbound h
 ---
 
 ## 14. Testing
-Run the backend test suite:
+
+### Run Backend API Test Suite:
 ```bash
 python test_backend_api.py
 ```
-**Test Results**: **8/8 verification tests passed** covering:
+**API Integration Results**: **8/8 verification tests passed** covering:
 - `/api/health`: Service health check.
 - `/api/categories` & `/api/sources`: Ingestion sources and category metadata.
 - `/api/articles`: Pagination, listing, and ordering.
@@ -233,7 +234,23 @@ python test_backend_api.py
 - `/api/articles/{id}/summarize`: AI / heuristic briefing generation.
 - `/api/scripts/generate` and export: Briefing script generation and download.
 
-To test the frontend build:
+### Run Pytest Unit Processing Suite:
+```bash
+PYTHONPATH=. pytest tests/ -v
+```
+**Unit Processing Results**: **8/8 unit tests passed** covering:
+- `test_clean_html_utility`: HTML tag stripping and sanitization.
+- `test_deduplicator_removes_exact_and_link_duplicates`: Multi-source title & canonical URL deduplication.
+- `test_deduplicator_handles_malformed_entries_safely`: Missing title/link resilience.
+- `test_cve_extraction_and_normalization`: Regex detection and uppercase deduplication.
+- `test_threat_classification_and_severity`: Categorization rules and Critical/High marker evaluation.
+- `test_iso_date_parsing_resilience`: RFC 2822, ISO-8601, and timezone-aware UTC handling.
+- `test_deterministic_article_id_generation`: SHA-256 fingerprint collision prevention.
+- `test_ai_summary_heuristic_fallback_integrity`: Offline summary generation without API key.
+
+Total Backend Test Coverage: **16/16 Tests Passed (100% Success)**.
+
+### Test Frontend Production Build:
 ```bash
 cd frontend
 npm run build

@@ -44,8 +44,15 @@ def fetch_feed(source: str, url: str) -> List[Dict]:
             if not title:
                 continue
 
-            summary = clean_html(entry.get("summary", "") or entry.get("description", ""))
             link = entry.get("link", "").strip()
+            # Enforce valid HTTP/HTTPS URL
+            if not link or not (link.startswith("http://") or link.startswith("https://")):
+                continue
+
+            summary = clean_html(entry.get("summary", "") or entry.get("description", ""))
+            if not summary:
+                summary = f"Cybersecurity advisory from {source} regarding {title}."
+
             published = entry.get("published", "") or entry.get("pubDate", "")
 
             articles.append({
